@@ -1,0 +1,53 @@
+### API Endpoints
+
+All API endpoints use a GET HTTP Request Method
+[Search Jobs](https://developer.usajobs.gov/api-reference/get-api-Search)
+[Agency Subelements Code List](https://developer.usajobs.gov/api-reference/get-codelist-agencysubelements)
+[Occupational Series Code List](https://developer.usajobs.gov/api-reference/get-codelist-occupationalseries)
+[Pay Plans Code List](https://developer.usajobs.gov/api-reference/get-codelist-payplans)
+[Postal Codes Code List](https://developer.usajobs.gov/api-reference/get-codelist-postalcodes)
+[Geo-Loc Codes Code List](https://developer.usajobs.gov/api-reference/get-codelist-geoloccodes)
+[GSA Geo-Loc Codes Code List](https://developer.usajobs.gov/api-reference/get-codelist-gsageoloccodes)
+[Countries Code List](https://developer.usajobs.gov/api-reference/get-codelist-countries)
+[Country Subdivisions Code List](https://developer.usajobs.gov/api-reference/get-codelist-countrysubdivisions)
+[Travel Code List](https://developer.usajobs.gov/api-reference/get-codelist-travelpercentages)
+[Position Schedule Types Code
+                    List](https://developer.usajobs.gov/api-reference/get-codelist-positionscheduletypes)
+[Position Offering Types Code
+                    List](https://developer.usajobs.gov/api-reference/get-codelist-positionofferingtypes)
+[Who May Apply Code List](https://developer.usajobs.gov/api-reference/get-codelist-whomayapply)
+[Hiring Paths Types Code List](https://developer.usajobs.gov/api-reference/get-codelist-hiringpaths)
+[Academic Honors Code List](https://developer.usajobs.gov/api-reference/get-codelist-academichonors)
+[Action Code List](https://developer.usajobs.gov/api-reference/get-codelist-actioncode)
+[Degree Type Code List](https://developer.usajobs.gov/api-reference/get-codelist-degreetypecode)
+[Document Format Code List](https://developer.usajobs.gov/api-reference/get-codelist-documentformats)
+[Race Code List](https://developer.usajobs.gov/api-reference/get-codelist-racecodes)
+[Ethnicity Code List](https://developer.usajobs.gov/api-reference/get-codelist-ethnicity)
+[Documentations Code List](https://developer.usajobs.gov/api-reference/get-codelist-documentations)
+[Federal Employment Statuses
+                    Code List](https://developer.usajobs.gov/api-reference/get-codelist-federalemploymentstatuses)
+[Language Proficiencies Code
+                    List](https://developer.usajobs.gov/api-reference/get-codelist-languageproficiency)
+[Language Code List](https://developer.usajobs.gov/api-reference/get-codelist-languagecodes)
+[Military Status Code List](https://developer.usajobs.gov/api-reference/get-codelist-militarystatuscodes)
+[Referee Type Code List](https://developer.usajobs.gov/api-reference/get-codelist-refereetypecodes)
+[Special Hirings Code List](https://developer.usajobs.gov/api-reference/get-codelist-specialhirings)
+[Remuneration Rate
+                    Interval Code List](https://developer.usajobs.gov/api-reference/get-codelist-remunerationrateintervalcodes)
+[Application Status Code List](https://developer.usajobs.gov/api-reference/get-codelist-applicationstatuses)
+[Academic Levels Code List](https://developer.usajobs.gov/api-reference/get-codelist-academiclevels)
+[Security Clearances Code List](https://developer.usajobs.gov/api-reference/get-codelist-securityclearances)
+[Key Standard Requirements Code
+                    List](https://developer.usajobs.gov/api-reference/get-codelist-keystandardrequirements)
+[Required Standard Documents
+                    Code List](https://developer.usajobs.gov/api-reference/get-codelist-requiredstandarddocuments)
+[Disabilities Code List](https://developer.usajobs.gov/api-reference/get-codelist-disabilities)
+[Applicant Suppliers Code List](https://developer.usajobs.gov/api-reference/get-codelist-applicantsuppliers)
+[Mission Critical Code List](https://developer.usajobs.gov/api-reference/get-codelist-missioncriticalcodes)
+[Announcement Closing Types
+                    Code List](https://developer.usajobs.gov/api-reference/get-codelist-announcementclosingtype)
+[Service Types Code List](https://developer.usajobs.gov/api-reference/get-codelist-servicetypes)
+[Location Expansions Code List](https://developer.usajobs.gov/api-reference/get-codelist-locationexpansions)
+USAJOBS is a [United States Office of Personnel Management](https://www.opm.gov) website.
+[LinkedIn](https://www.linkedin.com/company/usajobs)
+[YouTube](https://www.youtube.com/playlist?list=PLuzWeT0b0ErDyLedfJgutdV1_sf9q-2rZ)

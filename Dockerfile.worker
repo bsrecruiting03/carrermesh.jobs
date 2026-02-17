@@ -1,0 +1,19 @@
+FROM python:3.9
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY api/requirements.txt .
+# Install numpy first to satisfy transformers dependency checks
+RUN pip install --no-cache-dir numpy==1.26.4
+# Install heavy dependencies
+RUN pip install --no-cache-dir torch==2.1.2 --index-url https://download.pytorch.org/whl/cpu
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+CMD ["python", "us_ats_jobs/worker_enrichment.py"]

@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: 220 30% 10%;
+    --foreground: 210 40% 98%;
+    
+    --primary: 199 89% 48%;
+    --primary-foreground: 210 40% 98%;
+    
+    --accent: 262 83% 58%;
+    --accent-foreground: 210 40% 98%;
+
+    --card: 220 30% 12%;
+    --card-foreground: 210 40% 98%;
+
+    --border: 217 32% 17%;
+  }
+}
+
+body {
+  @apply antialiased text-slate-100 min-h-screen selection:bg-cyan-500/30;
+  /* Deep Space Gradient */
+  background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
+  background-attachment: fixed;
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] shadow-[0_8px_32px_0_rgba(0,0,0,0.37)];
+  }
+
+  .glass-card {
+    @apply bg-white/[0.02] hover:bg-white/[0.05] backdrop-blur-md border border-white/[0.05] hover:border-white/[0.1] transition-all duration-500;
+  }
+
+  .glass-button {
+    @apply bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] backdrop-blur-sm transition-all duration-300;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-indigo-400;
+  }
+
+  /* Golden Ratio Spacing Utilities */
+  .spacing-phi {
+    gap: 1.618rem;
+  }
+
+  .p-phi {
+    padding: 1.618rem;
+  }
+}

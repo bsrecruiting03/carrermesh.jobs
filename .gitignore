@@ -1,0 +1,39 @@
+# --- Security: Secrets & Credentials ---
+.env
+.env.local
+.venv/
+us_ats_jobs/config.py
+keys.json
+secrets.yaml
+
+# --- Data: Databases & Large Files ---
+*.db
+*.sqlite
+*.sqlite3
+us_ats_jobs/db/jobs.db
+us_ats_jobs/db/jobs.db-journal
+*.csv
+*.xlsx
+*.json
+!companies.json
+raw_jobs_dump/
+
+# --- Python: Bytecode & Cache ---
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+dist/
+build/
+
+# --- IDE & System ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Cleanup & Logs ---
+_archive_project_audit/
+*.log
+*.err
+server_log.txt

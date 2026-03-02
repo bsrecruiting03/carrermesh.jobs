@@ -521,15 +521,15 @@
             const company = toTitleCase(job.company);
 
             const location = job.city && job.state ? `${job.city}, ${job.state}` : job.location || '';
-            const visaText = job.visa_confirmed
+            const visaText = job.visa || (job.visa_confirmed
                 ? `✅ Confirmed (${Math.round((job.visa_confidence || 0) * 100)}% AI confidence)`
                 : job.visa_confidence > 0
                     ? `${Math.round(job.visa_confidence * 100)}% AI confidence`
-                    : 'Not specified';
+                    : 'Not specified');
 
-            const daysAgo = job.days_ago != null
+            const daysAgo = job.date ? `Posted on ${job.date}` : (job.days_ago != null
                 ? (job.days_ago === 0 ? '🔥 Today' : `${job.days_ago} days ago`)
-                : 'Recently';
+                : 'Recently');
 
             const isRemote = job.is_remote === true || job.is_remote === 1;
             const visaOk = job.visa_confirmed === true || job.visa_confirmed === 1;

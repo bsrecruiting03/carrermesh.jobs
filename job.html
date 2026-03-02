@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Job Detail — CareerMesh</title>
+    <meta name="description" content="View job details on CareerMesh" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #0a0f1e;
+            --surface: #0f172a;
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #e2e8f0;
+            --muted: #64748b;
+            --cyan: #06b6d4;
+            --indigo: #6366f1;
+            --emerald: #10b981;
+            --purple: #a855f7;
+            --navbar-bg: rgba(10, 15, 30, 0.9);
+        }
+
+        /* ── Light Mode ── */
+        body.light-mode {
+            --bg: #f0f4f8;
+            --surface: #ffffff;
+            --border: rgba(0, 0, 0, 0.08);
+            --text: #1e293b;
+            --muted: #64748b;
+            --navbar-bg: rgba(240, 244, 248, 0.92);
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--navbar-bg);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 1.5rem;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        #theme-toggle {
+            margin-left: auto;
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--muted);
+            font-size: 1rem;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        #theme-toggle:hover {
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--muted);
+            transition: color 0.15s;
+        }
+
+        .back-btn:hover {
+            color: var(--text);
+        }
+
+        .brand {
+            font-weight: 900;
+            font-size: 1rem;
+            letter-spacing: -0.03em;
+        }
+
+        .brand span {
+            color: var(--cyan);
+        }
+
+        .container {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem 5rem;
+        }
+
+        .loader {
+            text-align: center;
+            padding: 6rem;
+            color: var(--muted);
+        }
+
+        .loader-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(6, 182, 212, 0.2);
+            border-top-color: var(--cyan);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .error-state,
+        .not-found-state {
+            text-align: center;
+            padding: 5rem 1rem;
+        }
+
+        .error-state h2,
+        .not-found-state h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+        }
+
+        .error-state p,
+        .not-found-state p {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        /* Header card */
+        .job-header {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .job-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--cyan), var(--indigo));
+        }
+
+        .category-row {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.25rem;
+        }
+
+        .tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.25rem 0.75rem;
+            border-radius: 99px;
+            border: 1px solid;
+        }
+
+        .tag-dept {
+            background: rgba(6, 182, 212, 0.08);
+            color: #67e8f9;
+            border-color: rgba(6, 182, 212, 0.2);
+        }
+
+        .tag-remote {
+            background: rgba(99, 102, 241, 0.08);
+            color: #a5b4fc;
+            border-color: rgba(99, 102, 241, 0.2);
+        }
+
+        .tag-visa {
+            background: rgba(168, 85, 247, 0.08);
+            color: #d8b4fe;
+            border-color: rgba(168, 85, 247, 0.2);
+        }
+
+        h1 {
+            font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+            margin-bottom: 1.25rem;
+        }
+
+        .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1.5rem;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        /* Stats grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-value {
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        /* Apply section */
+        .apply-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        @media (min-width: 600px) {
+            .apply-card {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
+        }
+
+        .apply-info h2 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 0.35rem;
+        }
+
+        .apply-info p {
+            font-size: 0.82rem;
+            color: var(--muted);
+            max-width: 400px;
+        }
+
+        .apply-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.85rem 2rem;
+            background: linear-gradient(135deg, #0891b2, #4f46e5);
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.2s;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+        .apply-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
+        }
+
+        .apply-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* Description */
+        .description-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .section-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            margin-bottom: 1rem;
+        }
+
+        .description-body {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            line-height: 1.8;
+            word-wrap: break-word;
+        }
+
+        /* Rendered HTML description cleanup */
+        .description-body p {
+            margin-bottom: 0.75rem;
+        }
+
+        .description-body ul,
+        .description-body ol {
+            margin: 0.5rem 0 0.75rem 1.5rem;
+        }
+
+        .description-body li {
+            margin-bottom: 0.25rem;
+        }
+
+        .description-body strong,
+        .description-body b {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .description-body h2,
+        .description-body h3,
+        .description-body h4 {
+            color: var(--text);
+            font-weight: 700;
+            margin: 1rem 0 0.5rem;
+        }
+
+        /* Skills */
+        .skills-section {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .skill-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.75rem;
+        }
+
+        .skill-chip {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.3rem 0.75rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a class="back-btn" href="index.html">← Back to Jobs</a>
+        <a class="brand" href="index.html">Career<span>Mesh</span></a>
+        <button id="theme-toggle" title="Toggle theme" aria-label="Toggle theme">🌙</button>
+    </nav>
+
+    <div class="container">
+        <div id="content">
+            <div class="loader">
+                <div class="loader-spinner"></div>
+                Loading job…
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const DATA_BASE = '/carrermesh.jobs/data';
+
+        function esc(s) {
+            return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function toTitleCase(str) {
+            if (!str) return '';
+            let clean = str.split('|')[0].replace(/_/g, ' ');
+            return clean.split('-')
+                .map(part => part.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' '))
+                .join('-');
+        }
+
+        function formatSalary(min, max) {
+            const mn = Number(min) || 0, mx = Number(max) || 0;
+            if (!mn && !mx) return 'Not specified';
+            const ref = mx || mn;
+            if (ref < 500) {
+                if (mn && mx && mn !== mx) return `$${mn}–$${mx}/hr`;
+                return `$${mx || mn}/hr`;
+            }
+            const fmtK = n => `$${(n / 1000).toFixed(0)}k`;
+            if (mn && mx && mn !== mx) return `${fmtK(mn)}–${fmtK(mx)}/yr`;
+            if (mx) return `~${fmtK(mx)}/yr`;
+            return `~${fmtK(mn)}/yr`;
+        }
+
+        /** Strip dangerous tags from HTML, keep structure tags safe to innerHTML */
+        function sanitizeHtml(html) {
+            if (!html) return '';
+            // Detect if content is HTML or plain text
+            const isHtml = /<[a-z][\s\S]*>/i.test(html);
+            if (!isHtml) {
+                // Plain text — preserve line breaks
+                return esc(html).replace(/\n/g, '<br>');
+            }
+            // HTML content — strip dangerous tags, remove inline styles
+            const div = document.createElement('div');
+            div.innerHTML = html;
+            // Remove dangerous elements
+            div.querySelectorAll('script, iframe, object, embed, form, input, button').forEach(el => el.remove());
+            // Remove inline style attributes
+            div.querySelectorAll('[style]').forEach(el => el.removeAttribute('style'));
+            // Remove class attributes to avoid style conflicts
+            div.querySelectorAll('[class]').forEach(el => el.removeAttribute('class'));
+            return div.innerHTML;
+        }
+
+        async function fetchJson(path) {
+            const res = await fetch(`${DATA_BASE}/${path}`);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return res.json();
+        }
+
+        async function loadJob() {
+            const id = new URLSearchParams(location.search).get('id');
+            if (!id) {
+                renderError('No job ID in URL.');
+                return;
+            }
+
+            try {
+                const meta = await fetchJson('meta.json');
+                let job = null;
+
+                // Check each page for matching job
+                for (let i = 1; i <= meta.total_pages; i++) {
+                    const page = await fetchJson(`jobs_page_${i}.json`);
+                    const jobs = page.jobs || page;
+                    const found = jobs.find(j => j.job_id === id);
+                    if (found) { job = found; break; }
+                }
+
+                if (!job) {
+                    renderNotFound(id);
+                    return;
+                }
+
+                document.title = `${job.title} at ${job.company} — CareerMesh`;
+                renderJob(job);
+
+            } catch (err) {
+                renderError(err.message);
+            }
+        }
+
+        function renderJob(job) {
+            const salary = formatSalary(job.salary_min, job.salary_max);
+            const company = toTitleCase(job.company);
+
+            const location = job.city && job.state ? `${job.city}, ${job.state}` : job.location || '';
+            const visaText = job.visa_confirmed
+                ? `✅ Confirmed (${Math.round((job.visa_confidence || 0) * 100)}% AI confidence)`
+                : job.visa_confidence > 0
+                    ? `${Math.round(job.visa_confidence * 100)}% AI confidence`
+                    : 'Not specified';
+
+            const daysAgo = job.days_ago != null
+                ? (job.days_ago === 0 ? '🔥 Today' : `${job.days_ago} days ago`)
+                : 'Recently';
+
+            const isRemote = job.is_remote === true || job.is_remote === 1;
+            const visaOk = job.visa_confirmed === true || job.visa_confirmed === 1;
+
+            const skills = [...(job.tech_stack || []), ...(job.skills || [])]
+                .filter((v, i, a) => a.indexOf(v) === i).slice(0, 20);
+
+            const categoryTags = [
+                job.department_category ? `<span class="tag tag-dept">${esc(job.department_category)}</span>` : '',
+                isRemote ? '<span class="tag tag-remote">🌍 Remote</span>' : '',
+                visaOk ? '<span class="tag tag-visa">🛂 Visa Confirmed</span>' : '',
+            ].filter(Boolean).join('');
+
+            // Build page title using clean company name
+            document.title = `${job.title} at ${company} — CareerMesh`;
+
+            document.getElementById('content').innerHTML = `
+    <!-- Header -->
+    <div class="job-header">
+      ${categoryTags ? `<div class="category-row">${categoryTags}</div>` : ''}
+      <h1>${esc(job.title)}</h1>
+      <div class="meta-row">
+        <span class="meta-item">🏢 ${esc(company)}</span>
+        ${location ? `<span class="meta-item">📍 ${esc(location)}</span>` : ''}
+        <span class="meta-item">🕐 ${daysAgo}</span>
+        ${job.employment_type ? `<span class="meta-item">⏱ ${esc(job.employment_type)}</span>` : ''}
+      </div>
+    </div>
+
+    <!-- Quick stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <div class="stat-label">Salary</div>
+        <div class="stat-value">${salary}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📅</div>
+        <div class="stat-label">Experience</div>
+        <div class="stat-value">${job.experience_years != null ? job.experience_years + ' yrs' : 'N/A'}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🛂</div>
+        <div class="stat-label">Visa Sponsor</div>
+        <div class="stat-value" style="font-size:0.78rem">${visaText}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🏠</div>
+        <div class="stat-label">Work Mode</div>
+        <div class="stat-value">${esc(job.work_mode || (isRemote ? 'Remote' : 'Onsite'))}</div>
+      </div>
+    </div>
+
+    <!-- Apply -->
+    <div class="apply-card">
+      <div class="apply-info">
+        <h2>Ready to apply?</h2>
+        <p>You'll be redirected to ${esc(company)}'s official career page.</p>
+      </div>
+      <a class="apply-btn" href="${esc(job.job_link)}" target="_blank" rel="noopener noreferrer">
+        Apply Now →
+      </a>
+    </div>
+
+    <!-- Description -->
+    <div class="description-card">
+      <div class="section-title">Job Description</div>
+      <div class="description-body" id="desc-body"></div>
+
+      ${skills.length > 0 ? `
+        <div class="skills-section">
+          <div class="section-title">Skills &amp; Tech Stack</div>
+          <div class="skill-chips">
+            ${skills.map(s => `<span class="skill-chip">${esc(s)}</span>`).join('')}
+          </div>
+        </div>
+      ` : ''}
+    </div>
+  `;
+            // Inject sanitized description AFTER setting innerHTML (safe)
+            const descEl = document.getElementById('desc-body');
+            if (descEl) {
+                const safe = sanitizeHtml(job.job_description || job.job_summary || '');
+                descEl.innerHTML = safe || '<em style="color:#475569">No description available.</em>';
+            }
+        }
+
+
+
+        function renderError(msg) {
+            document.getElementById('content').innerHTML = `
+    <div class="error-state">
+      <h2>Could not load job</h2>
+      <p>${esc(msg)}</p>
+      <a href="index.html" style="display:inline-block;margin-top:1.5rem;padding:0.75rem 2rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;font-weight:700;color:#e2e8f0">← Back to jobs</a>
+    </div>`;
+        }
+
+        function renderNotFound(id) {
+            document.getElementById('content').innerHTML = `
+    <div class="not-found-state">
+      <h2>Job Not Found</h2>
+      <p>This listing may have expired. Job ID: ${esc(id)}</p>
+      <a href="index.html" style="display:inline-block;margin-top:1.5rem;padding:0.75rem 2rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;font-weight:700;color:#e2e8f0">← Back to jobs</a>
+    </div>`;
+        }
+
+        // ── Theme toggle
+        const themeBtn = document.getElementById('theme-toggle');
+        const savedTheme = localStorage.getItem('cm-theme') || 'dark';
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+            themeBtn.textContent = '☀️';
+        }
+        themeBtn.addEventListener('click', () => {
+            const isLight = document.body.classList.toggle('light-mode');
+            themeBtn.textContent = isLight ? '☀️' : '🌙';
+            localStorage.setItem('cm-theme', isLight ? 'light' : 'dark');
+        });
+
+        loadJob();
+    </script>
+</body>
+
+</html>

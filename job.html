@@ -534,11 +534,17 @@
             const isRemote = job.is_remote === true || job.is_remote === 1;
             const visaOk = job.visa_confirmed === true || job.visa_confirmed === 1;
 
-            const skills = [...(job.tech_stack || []), ...(job.skills || [])]
-                .filter((v, i, a) => a.indexOf(v) === i).slice(0, 20);
+            // Merge all tech stacks into a single tag cloud
+            const techStack = [
+                ...(job.tech_languages || []),
+                ...(job.tech_frameworks || []),
+                ...(job.tech_tools || []),
+                ...(job.tech_cloud || []),
+                ...(job.soft_skills || [])
+            ].filter((v, i, a) => a.indexOf(v) === i);
 
             const categoryTags = [
-                job.department_category ? `<span class="tag tag-dept">${esc(job.department_category)}</span>` : '',
+                job.seniority ? `<span class="tag tag-dept" style="background:#6366f1">${esc(job.seniority.toUpperCase())}</span>` : '',
                 isRemote ? '<span class="tag tag-remote">🌍 Remote</span>' : '',
                 visaOk ? '<span class="tag tag-visa">🛂 Visa Confirmed</span>' : '',
             ].filter(Boolean).join('');
@@ -575,6 +581,7 @@
         <div class="stat-icon">🛂</div>
         <div class="stat-label">Visa Sponsor</div>
         <div class="stat-value" style="font-size:0.78rem">${visaText}</div>
+        ${job.visa_evidence ? `<div style="font-size:0.65rem; color:#64748b; margin-top:4px; line-height:1.2">📝 ${esc(job.visa_evidence)}</div>` : ''}
       </div>
       <div class="stat-card">
         <div class="stat-icon">🏠</div>
@@ -582,6 +589,24 @@
         <div class="stat-value">${esc(job.work_mode || (isRemote ? 'Remote' : 'Onsite'))}</div>
       </div>
     </div>
+
+    <!-- Summary -->
+    ${job.summary ? `
+    <div class="description-card" style="border-left: 4px solid #6366f1; background: #f8fafc">
+      <div class="section-title">HR Scientist Summary</div>
+      <p style="font-size: 1.05rem; line-height: 1.6; color: #1e293b; font-style: italic">"${esc(job.summary)}"</p>
+    </div>
+    ` : ''}
+
+    <!-- Tech Stack -->
+    ${techStack.length > 0 ? `
+    <div class="description-card">
+      <div class="section-title">Verified Tech Stack</div>
+      <div class="skills-cloud" style="display:flex; flex-wrap:wrap; gap:8px; margin-top:12px">
+        ${techStack.map(s => `<span class="tag" style="background:#e0e7ff; color:#4338ca; border:1px solid #c7d2fe">${esc(s)}</span>`).join('')}
+      </div>
+    </div>
+    ` : ''}
 
     <!-- Apply -->
     <div class="apply-card">
@@ -596,19 +621,10 @@
 
     <!-- Description -->
     <div class="description-card">
-      <div class="section-title">Job Description</div>
+      <div class="section-title">Full Job Description</div>
       <div class="description-body" id="desc-body"></div>
-
-      ${skills.length > 0 ? `
-        <div class="skills-section">
-          <div class="section-title">Skills &amp; Tech Stack</div>
-          <div class="skill-chips">
-            ${skills.map(s => `<span class="skill-chip">${esc(s)}</span>`).join('')}
-          </div>
-        </div>
-      ` : ''}
     </div>
-  `;
+    `;
             // Inject sanitized description AFTER setting innerHTML (safe)
             const descEl = document.getElementById('desc-body');
             if (descEl) {
@@ -621,20 +637,20 @@
 
         function renderError(msg) {
             document.getElementById('content').innerHTML = `
-    <div class="error-state">
+            < div class="error-state" >
       <h2>Could not load job</h2>
       <p>${esc(msg)}</p>
       <a href="index.html" style="display:inline-block;margin-top:1.5rem;padding:0.75rem 2rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;font-weight:700;color:#e2e8f0">← Back to jobs</a>
-    </div>`;
+    </div > `;
         }
 
         function renderNotFound(id) {
             document.getElementById('content').innerHTML = `
-    <div class="not-found-state">
+            < div class="not-found-state" >
       <h2>Job Not Found</h2>
       <p>This listing may have expired. Job ID: ${esc(id)}</p>
       <a href="index.html" style="display:inline-block;margin-top:1.5rem;padding:0.75rem 2rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;font-weight:700;color:#e2e8f0">← Back to jobs</a>
-    </div>`;
+    </div >`;
         }
 
         // ── Theme toggle
